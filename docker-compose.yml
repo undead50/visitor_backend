@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+  # nginx:
+  #   image: nginx:1.15
+  #   container_name: nginx
+  #   volumes:
+  #     - ./default.conf:/etc/nginx/conf.d/default.conf
+  #     - ./build:/var/www/build/
+  #   ports:
+  #     - "5090:5090"
+    # depends_on:
+    #   - signature
+    # network_mode: host  
+
+
+   
+
+  signature:
+    image: signature
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: signature
+    volumes:
+      - "./prisma:/usr/src/app/prisma"
+      - "./certificate:/usr/src/app/certificate"
+      - "./.env:/usr/src/app/.env"
+    extra_hosts:
+      - "citizenapiuat.iis:192.168.76.64"
+    environment:
+      - TZ=Asia/Kathmandu
+      
+volumes:
+  myapp:

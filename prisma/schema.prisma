@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  id              Int       @id @default(autoincrement())
+  name            String    @db.VarChar(50)
+  updated_at      DateTime?
+  deleted_at      DateTime?
+  created_by      String?
+  created_at      DateTime  @default(now())
+  @@map("tbl_department")
+}
+
+model Visitor {
+  id              Int       @id @default(autoincrement())
+  name            String    @db.VarChar(50)
+  purpose_of_visit         String    @db.VarChar(50)
+  department      String    @db.VarChar(50)
+  check_in_time   DateTime?
+  status          String    @db.VarChar(10)
+  address         String
+  updated_at      DateTime?
+  photo           String?
+  files           String?
+  deleted_at      DateTime?
+  created_by      String?
+  created_at      DateTime  @default(now())
+  uploaded_files  Json
+  mobile_no       String?    @db.VarChar(50)
+  host_contact_person String @db.VarChar(50)
+  @@map("tbl_visitor")
+}
