@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -17,17 +17,37 @@ model Department {
   @@map("tbl_department")
 }
 
+model Employee {
+  id              Int       @id @default(autoincrement())
+  branch          String
+  created_at      DateTime  @default(now())
+  CreatedBy       String?
+  departmentName String    @db.VarChar(50)
+  cbsUsername    String?
+  domainName     String    @db.VarChar(50)
+  email           String    @db.VarChar(50)
+  name            String    @db.VarChar(50)
+  role            String?    @db.VarChar(50)
+  updated_at      DateTime?
+  employeeDesignation String?    @db.VarChar(50)
+  systemRole      String?    @db.VarChar(50)
+  isActive       String?    @db.VarChar(5)
+  @@map("tbl_employee")
+}
+
 model Visitor {
   id              Int       @id @default(autoincrement())
   name            String    @db.VarChar(50)
   purpose_of_visit         String    @db.VarChar(50)
   department      String    @db.VarChar(50)
   check_in_time   DateTime?
+  check_out_time   DateTime?
   status          String    @db.VarChar(10)
   address         String
   updated_at      DateTime?
-  photo           String? @db.Text?
+  photo           String?
   files           String?
+  id_card_no      String
   deleted_at      DateTime?
   created_by      String?
   created_at      DateTime  @default(now())

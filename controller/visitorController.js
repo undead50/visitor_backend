@@ -101,6 +101,7 @@ const deleteVisitor = async (req, res) => {
 
 const updateVisitor = async (req, res) => {
   try {
+    if (req.files && req.files.length > 0) {
     upload.array('files')(req, res, async (err) => {
       if (err) {
         console.error(err);
@@ -120,7 +121,17 @@ const updateVisitor = async (req, res) => {
       });
 
       res.status(200).json(updatedVisitor);
-    });
+    });}
+    else {
+      const { visitorId } = req.params;
+      const updatedVisitorData = req.body;
+      const updatedVisitor = await prisma.visitor.update({
+        where: { id: parseInt(visitorId) },
+        data: updatedVisitorData,
+      });
+
+      res.status(200).json(updatedVisitor);
+    }
   } catch (error) {
     console.error('Error updating visitor:', error);
     res.status(500).json({ error: 'Failed to update visitor' });
