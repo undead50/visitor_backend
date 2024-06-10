@@ -65,6 +65,7 @@ const createVisitor = async (req, res) => {
       const body = req.body; // Access the request body
       const files = req.files; // Now contains an array of uploaded files
       body.uploaded_files = files;
+      body.department = parseInt(body.department)
       body.status = 'C';
       body.check_in_time = dayjs(body.check_in_time).toISOString();
       const visitor = await prisma.visitor.create({
@@ -99,9 +100,26 @@ const deleteVisitor = async (req, res) => {
   }
 };
 
+const checkoutVisitor = async (req,res)=>{
+  try {
+    
+      const { visitorId } = req.params;
+      const updatedVisitorData = req.body;
+      const updatedVisitor = await prisma.visitor.update({
+        where: { id: parseInt(visitorId) },
+        data: updatedVisitorData,
+      });
+      res.status(200).json(updatedVisitor);
+  } catch (error) {
+    console.error('Error updating visitor:', error);
+    res.status(500).json({ error: 'Failed to update visitor' });
+  }
+
+
+}
+
 const updateVisitor = async (req, res) => {
   try {
-    if (req.files && req.files.length > 0) {
     upload.array('files')(req, res, async (err) => {
       if (err) {
         console.error(err);
@@ -115,23 +133,16 @@ const updateVisitor = async (req, res) => {
       console.log(files);
       console.log(updatedVisitorData);
       updatedVisitorData.uploaded_files = files;
+      if(updatedVisitorData.department){
+      updatedVisitorData.department = parseInt(updatedVisitorData.department)
+      }
       const updatedVisitor = await prisma.visitor.update({
         where: { id: parseInt(visitorId) },
         data: updatedVisitorData,
       });
 
       res.status(200).json(updatedVisitor);
-    });}
-    else {
-      const { visitorId } = req.params;
-      const updatedVisitorData = req.body;
-      const updatedVisitor = await prisma.visitor.update({
-        where: { id: parseInt(visitorId) },
-        data: updatedVisitorData,
-      });
-
-      res.status(200).json(updatedVisitor);
-    }
+    })
   } catch (error) {
     console.error('Error updating visitor:', error);
     res.status(500).json({ error: 'Failed to update visitor' });
@@ -144,4 +155,5 @@ module.exports = {
   deleteVisitor,
   updateVisitor,
   serveFile,
+  checkoutVisitor,
 };

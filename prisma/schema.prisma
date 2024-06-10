@@ -39,7 +39,8 @@ model Visitor {
   id              Int       @id @default(autoincrement())
   name            String    @db.VarChar(50)
   purpose_of_visit         String    @db.VarChar(50)
-  department      String    @db.VarChar(50)
+  sol_id          String?   @db.VarChar(10)
+  department      Int
   check_in_time   DateTime?
   check_out_time   DateTime?
   status          String    @db.VarChar(10)
