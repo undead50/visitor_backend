@@ -21,17 +21,17 @@ model Employee {
   id              Int       @id @default(autoincrement())
   branch          String
   created_at      DateTime  @default(now())
-  CreatedBy       String?
-  departmentName String    @db.VarChar(50)
-  cbsUsername    String?
-  domainName     String    @db.VarChar(50)
+  created_by       String?
+  department_name String    @db.VarChar(50)
+  cbs_username    String?
+  domain_name     String    @db.VarChar(50)
   email           String    @db.VarChar(50)
   name            String    @db.VarChar(50)
   role            String?    @db.VarChar(50)
   updated_at      DateTime?
-  employeeDesignation String?    @db.VarChar(50)
-  systemRole      String?    @db.VarChar(50)
-  isActive       String?    @db.VarChar(5)
+  employee_designation String?    @db.VarChar(50)
+  system_role      String?    @db.VarChar(50)
+  is_active       String?    @db.VarChar(5)
   @@map("tbl_employee")
 }
 

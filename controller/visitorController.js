@@ -4,6 +4,14 @@ const prisma = new PrismaClient();
 const fs = require('fs');
 const dayjs = require('dayjs');
 const path = require('path');
+const utc = require('dayjs/plugin/utc'); // Import the UTC plugin
+const timezone = require('dayjs/plugin/timezone'); // Import the timezone plugin
+
+// Extend Day.js with the plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+
 
 const storage = multer.diskStorage({
   destination: 'files/', // Directory where uploaded files will be stored
@@ -67,7 +75,7 @@ const createVisitor = async (req, res) => {
       body.uploaded_files = files;
       body.department = parseInt(body.department)
       body.status = 'C';
-      body.check_in_time = dayjs(body.check_in_time).toISOString();
+      body.check_in_time =  dayjs(body.check_in_time).toISOString();
       const visitor = await prisma.visitor.create({
         data: body,
       });
@@ -100,23 +108,35 @@ const deleteVisitor = async (req, res) => {
   }
 };
 
-const checkoutVisitor = async (req,res)=>{
+const checkoutVisitor = async (req, res) => {
   try {
-    
-      const { visitorId } = req.params;
-      const updatedVisitorData = req.body;
-      const updatedVisitor = await prisma.visitor.update({
-        where: { id: parseInt(visitorId) },
-        data: updatedVisitorData,
-      });
-      res.status(200).json(updatedVisitor);
+    const { visitorId } = req.params;
+    const updatedVisitorData = req.body;
+
+    // Convert check_in_time string to Date object
+    const checkOutTime = new Date(updatedVisitorData.check_out_time);
+
+    // Adjust time to match Nepal time zone (UTC+5:45)
+    checkOutTime.setHours(checkOutTime.getHours() + 5);
+    checkOutTime.setMinutes(checkOutTime.getMinutes() + 45);
+
+    // Set check_in_time in updatedVisitorData to adjusted time
+    updatedVisitorData.check_out_time = checkOutTime;
+
+    console.log(updatedVisitorData);
+
+    // Update visitor data in the database
+    const updatedVisitor = await prisma.visitor.update({
+      where: { id: parseInt(visitorId) },
+      data: updatedVisitorData,
+    });
+
+    res.status(200).json(updatedVisitor);
   } catch (error) {
     console.error('Error updating visitor:', error);
     res.status(500).json({ error: 'Failed to update visitor' });
   }
-
-
-}
+};
 
 const updateVisitor = async (req, res) => {
   try {

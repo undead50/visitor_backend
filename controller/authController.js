@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 // Define the function for Active Directory login
 const adLoginUser = (req, res) => {
   const { username, password } = req.body;
-  const domainName = `${username}@ebl.com.np`;
+  const domain_name = `${username}@ebl.com.np`;
   
   const empDetail = {
     domainUserName: 'ayush.pradhan',
@@ -25,13 +25,13 @@ const adLoginUser = (req, res) => {
   });
   empDetail.token = accessToken;
 
-  console.log(`username: ${username}, domainName: ${domainName}`);
+  console.log(`username: ${username}, domain_name: ${domain_name}`);
 
   const client = ldap.createClient({
     url: process.env.LDAP_URL,
   });
 
-  client.bind(domainName, password, (err) => {
+  client.bind(domain_name, password, (err) => {
     if (err) {
       // Check if the error is due to invalid credentials
       if (err.message === 'Invalid Credentials') {
@@ -43,7 +43,7 @@ const adLoginUser = (req, res) => {
       }
     } else {
       async function getEmployee(){
-        const sql = `select * from tbl_employee where "domainName" = '${username}'`
+        const sql = `select * from tbl_employee where domain_name = '${username}'`
         const data =  await prisma.$queryRawUnsafe(sql)
         console.log(data)
         if (data && data.length > 0) {
