@@ -17,6 +17,16 @@ model Department {
   @@map("tbl_department")
 }
 
+model Card {
+  id              Int       @id @default(autoincrement())
+  card_no         String
+  created_by      String?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime?
+  is_active       String?    @db.VarChar(5)
+  @@map("tbl_card")
+}
+
 model Employee {
   id              Int       @id @default(autoincrement())
   branch          String
@@ -48,7 +58,7 @@ model Visitor {
   updated_at      DateTime?
   photo           String?
   files           String?
-  id_card_no      String
+  id_card_no      Int
   deleted_at      DateTime?
   created_by      String?
   created_at      DateTime  @default(now())

@@ -32,6 +32,7 @@ const applicantRouter = require('./routes/applicantRoute');
 const visitorRouter = require('./routes/visitorRoute');
 const departmentRouter = require('./routes/departmentRoute');
 const employeeRouter = require('./routes/employeeRoute');
+const cardRouter = require('./routes/cardRoute');
 
 //middleware Access
 const {
@@ -82,6 +83,7 @@ app.use('/api/signature',signtureRouter);
 app.use('/api/share',shareRouter);
 app.use('/api/applicant',applicantRouter)
 app.use('/api/employee',employeeRouter)
+app.use('/api/card',cardRouter)
 // Set the ip-address of your trusted reverse proxy server
 app.listen(process.env.PORT, () => {
   console.log(`Server started at port ${process.env.PORT}`);

@@ -50,7 +50,11 @@ const serveFile = async (req, res) => {
 
 const fetchVisitors = async (req, res) => {
   try {
-    const data = await prisma.Visitor.findMany();
+    const data = await prisma.Visitor.findMany({
+      orderBy: {
+        created_at: 'desc' // Assuming 'createdAt' is the field for creation timestamp
+      }
+    });
     return res.status(200).json(data);
   } catch (error) {
     console.error(error);
@@ -73,7 +77,8 @@ const createVisitor = async (req, res) => {
       const body = req.body; // Access the request body
       const files = req.files; // Now contains an array of uploaded files
       body.uploaded_files = files;
-      body.department = parseInt(body.department)
+      body.department = parseInt(body.department);
+      body.id_card_no = parseInt(body.id_card_no);
       body.status = 'C';
       body.check_in_time =  dayjs(body.check_in_time).toISOString();
       const visitor = await prisma.visitor.create({
@@ -155,6 +160,9 @@ const updateVisitor = async (req, res) => {
       updatedVisitorData.uploaded_files = files;
       if(updatedVisitorData.department){
       updatedVisitorData.department = parseInt(updatedVisitorData.department)
+      }
+      if(updatedVisitorData.id_card_no){
+        updatedVisitorData.id_card_no = parseInt(updatedVisitorData.id_card_no)
       }
       const updatedVisitor = await prisma.visitor.update({
         where: { id: parseInt(visitorId) },

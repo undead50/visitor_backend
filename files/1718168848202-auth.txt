@@ -1,0 +1,4 @@
+endPoint:https://eblapims.ebl.com.np/api/v1/connect
+headerAuth:
+username:QuickRPA
+password:QuickRPA@123

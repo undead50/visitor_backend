@@ -1,0 +1,2 @@
+Header Basic Auth : CreditX@123:CreditX@123
+api endpoint: https://eblchannelmanagerapi.iis/api/v1/connect
